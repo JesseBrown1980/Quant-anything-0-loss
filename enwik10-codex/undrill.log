@@ -1,0 +1,7 @@
+check: imul(0x9E3779B1, inv) = 1 (must be 1)
+lanes whose backward walk closed to the known initial state: 0/800
+bits recoverable per lane: 32.   bits needed per lane: 251664
+
+reconstructed 4194304 bytes from the 3,200-byte object alone
+exact byte matches: 0 / 4194304 = 0.0000%
+always-guess-most-common-byte baseline: 11.3294%

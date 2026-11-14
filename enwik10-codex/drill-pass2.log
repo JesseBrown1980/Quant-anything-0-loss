@@ -1,0 +1,4 @@
+streamed 10000000000 bytes of D:/asolaria-e10-20260719/corpus/enwik10 in 365.0s (27.4 MB/s), all discarded
+visited nodes: 1706530
+QR object: 3200 bytes = 3.1 KB   sha256=5669430ce73dc7268a0a8d51e82edb4550d63be07b29533c981e8ee6ecd67f1f
+ratio 10000000000 -> 3200  =  3125000x   (0.000003 bpb if it reconstructed)

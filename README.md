@@ -54,6 +54,20 @@ Restore OK. With the 20,029-byte decoder source charged: 2,255,081 bytes, 1.804.
 rows above. Receipt:
 [`receipts/FABLE52-CROWN-VC65-REDUCED-TABLE-TEST-2026-11-14.hbp`](receipts/FABLE52-CROWN-VC65-REDUCED-TABLE-TEST-2026-11-14.hbp).
 
+### enwik10 (10 GB) to a 3,200-byte codex and back, 2026-11-14
+
+Spec sealed before the runs. Rows: [`enwik10-codex/RESULT-ENWIK10-CODEX-20261114.hbp`](enwik10-codex/RESULT-ENWIK10-CODEX-20261114.hbp).
+
+| Step | Result |
+|---|---|
+| Quant (`drill3k.mjs`, whole file, 376 s) | 10,000,000,000 bytes to **3,200 bytes**, 3,125,000 to 1 |
+| Quant again (365 s) | byte-identical codex |
+| Unquant, Path 1 (codex names the corpus, bytes return from the store, 132 s) | **10,000,000,000 of 10,000,000,000 bytes**, SHA-256 equal; re-drilled, it gives the codex again |
+| Unquant from the codex alone (`undrill.mjs`) | 0 of 4,194,304 bytes; 0 of 800 lanes close |
+
+The exact return is Path 1: it needs the store that holds the corpus. The route through the
+funnel, the GGUF and the smelted star has not been run on enwik10 here; status OPEN.
+
 ### Run it
 
 ```
@@ -72,6 +86,7 @@ smaller machine change line 12 to `const TBITS: u32 = 24;` (about 1 GB), as in t
 | [`crown-codec/`](crown-codec/) | The codec family: Python context-mixing models, the Rust integer codecs and their variants (`rust/variants/`, 22 files, `vc65.rs` is the crown), results, the honest spec, the roadmap, the function laws, the rime and trijection work, the glyph languages, full disclosure |
 | [`quant-atlas/`](quant-atlas/) | The combined quant atlas (28 publicly recoverable quants in five regimes), its machine-readable registry, the measured addendum, the Path 1 / Path 2 / black-to-white-hole formulas, the shadow-resolution crate family, the inverse-pair law |
 | [`colour-qr-and-walls/`](colour-qr-and-walls/) | The 2026-11-13 measurements: the colour QR writer found and reproduced byte for byte, the clean-room round trip, regeneration of large bodies from seeds, exact rebuilding of 3D bodies from nine 2D walls, the HRM maze checkpoint, the codex switches |
+| [`enwik10-codex/`](enwik10-codex/) | The 2026-11-14 enwik10 test: spec and addendum, programs, the codex, logs, result rows |
 | [`receipts/`](receipts/) | Rows for runs made while assembling this repository |
 
 ## The quants located so far
