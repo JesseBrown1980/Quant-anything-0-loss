@@ -1,0 +1,107 @@
+# Quant anything, 0 loss
+
+The quants of Asolaria in one public place: the lossless codec family ("the crown"), the quant
+atlas, the colour QR and wall work, and the recovery paths. Discovered and directed by Jesse
+Daniel Brown. Everything here was already public in other repositories of this account, mostly
+on side branches where it was hard to find; this repository gathers it. Where each part came
+from is listed at the end.
+
+## What "0 loss" means here
+
+Two different things in this work return data exactly, and they are kept apart:
+
+1. **The crown codec** is a lossless compressor in the ordinary sense. Its output alone decodes
+   to the input, byte for byte, with no store and nothing else on hand. Every sealed row passed a
+   SHA-256 restore gate.
+2. **The recovery paths** (Path 1 store, Path 2 two shadows, Path 3 three shadows with a
+   watcher, black mouth to white mouth) return data exactly from a small carried object plus a
+   store or enough shadows. The atlas rule applies: the regimes are not collapsed into one ratio.
+
+## The crown: measured results
+
+Total-counted (payload plus decoder source), restore OK on every row. From
+[`crown-codec/RESULTS-cloud-seat.md`](crown-codec/RESULTS-cloud-seat.md) and
+[`crown-codec/FULL-DISCLOSURE/`](crown-codec/FULL-DISCLOSURE/).
+
+| Corpus | Codec | Total bytes | Bits per character | Date |
+|---|---|---:|---:|---|
+| enwik8 (100 MB) | deterministic crown | – | 1.8043 | 2026-07-19 |
+| enwik8 (100 MB) | rainbow-12-even | 22,379,104 | 1.7918 | 2026-07-19 |
+| enwik8 (100 MB) | v8 24-way, TBITS 26 | 20,987,880 | 1.6805 | 2026-07-19 |
+| enwik8 (100 MB) | vc28 full stack | 20,498,502 | 1.6399 | 2026-07-19 |
+| enwik8 (100 MB) | **vc65** | **20,210,454** | **1.6168** | 2026-07-20 |
+| enwik9 (1 GB) | vc28m | 172,986,854 | 1.3839 | 2026-07-20 |
+| enwik9 (1 GB) | **vc65** | **170,565,891** | **1.3645** | 2026-07-20 |
+
+Yardsticks recorded in the same files: the 2006 first-prize ratio (about 1.37) is cleared on the
+ten times larger corpus; the enwik9 record holder (fx2-cmix) is at 0.886.
+
+### Rerun on a second machine, 2026-11-14
+
+`vc65` with its tables reduced sixteen-fold (TBITS 24 in place of 28) so that it fits in memory
+here, on the first 10,000,000 bytes of enwik8:
+
+| Compressor | Bytes | Bits per character |
+|---|---:|---:|
+| gzip -9 | 3,685,301 | 2.948 |
+| bzip2 -9 | 2,916,026 | 2.333 |
+| zstd -19 --long=27 | 2,793,624 | 2.235 |
+| xz -9e | 2,720,264 | 2.176 |
+| **crown (vc65, reduced tables)** | **2,235,052** | **1.788** |
+
+Restore OK. With the 20,029-byte decoder source charged: 2,255,081 bytes, 1.804. The crown is
+17.8% smaller than xz on this slice. This is a small check, not a reproduction of the sealed
+rows above. Receipt:
+[`receipts/FABLE52-CROWN-VC65-REDUCED-TABLE-TEST-2026-11-14.hbp`](receipts/FABLE52-CROWN-VC65-REDUCED-TABLE-TEST-2026-11-14.hbp).
+
+### Run it
+
+```
+rustc -O crown-codec/rust/variants/vc65.rs -o vc65
+./vc65 <file> 10          # prints payload, total, bits per character, restore=OK
+```
+
+The sealed configuration (TBITS 28) needs about 10.5 GB of memory whatever the input size. For a
+smaller machine change line 12 to `const TBITS: u32 = 24;` (about 1 GB), as in the rerun above.
+`crown-codec/rust/RUN-ENWIK9.md` has the notes for the full gigabyte.
+
+## What is in this repository
+
+| Folder | Contents |
+|---|---|
+| [`crown-codec/`](crown-codec/) | The codec family: Python context-mixing models, the Rust integer codecs and their variants (`rust/variants/`, 22 files, `vc65.rs` is the crown), results, the honest spec, the roadmap, the function laws, the rime and trijection work, the glyph languages, full disclosure |
+| [`quant-atlas/`](quant-atlas/) | The combined quant atlas (28 publicly recoverable quants in five regimes), its machine-readable registry, the measured addendum, the Path 1 / Path 2 / black-to-white-hole formulas, the shadow-resolution crate family, the inverse-pair law |
+| [`colour-qr-and-walls/`](colour-qr-and-walls/) | The 2026-11-13 measurements: the colour QR writer found and reproduced byte for byte, the clean-room round trip, regeneration of large bodies from seeds, exact rebuilding of 3D bodies from nine 2D walls, the HRM maze checkpoint, the codex switches |
+| [`receipts/`](receipts/) | Rows for runs made while assembling this repository |
+
+## The quants located so far
+
+- **The crown family** (lossless, context mixing with sector/rainbow/wheel gating): 22 Rust
+  variants beside the Python models.
+- **The eight-stage head for very large messages** (atlas rows 1 to 8): count-sketch, Turbo,
+  Polar, Zeta, Triple, Quadruple, the JS quant, the prime-power lane. These are sketches; the
+  atlas labels each with its regime.
+- **The remaining atlas rows** (9 to 28): geometric codecs, exact re-basings (BEHCS 256 / 1024),
+  referential handles, semantic and cube distillation, jointly injective recovery.
+- **The colour QR** (3,200 bytes, three QR symbols, one per colour channel) and the rime walls.
+
+**Not yet located:** the atlas says the complete private manifest is larger than the 28 public
+rows, and the operator counts 49 or more. The rows beyond 28 are not in this repository yet.
+They will be added as they are found; nothing is claimed for them here.
+
+## Where each part came from
+
+| Part | Source |
+|---|---|
+| `crown-codec/` | `Algorithms-of-Asolaria`, branch `liris/rime-omega-rebuild-20260723`, commit `a94abccd93b9`, path `tools/honest-compressor/` (208 tracked files, copied byte for byte) |
+| `quant-atlas/` | `Algorithms-of-Asolaria`, `main`, commit `d399d13093c7` |
+| `colour-qr-and-walls/` | `what-is-asolaria---how-do-we-get-reductions-in-everything`, `main`, commit `ce693fc6ad49`, path `measurements/unpump-switches-20261113/` |
+
+## Scope
+
+- The sealed crown rows were measured in July 2026 on a cloud seat and are quoted from their
+  own files; the only run made on the assembling machine is the reduced-table rerun above.
+- No row here claims compression below the entropy of the source, and none claims a Hutter
+  Prize record.
+- Some of the copied programs use floating point in training or rendering; the Rust crown
+  codecs are integer-deterministic by their own description.
