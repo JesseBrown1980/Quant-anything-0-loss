@@ -25,6 +25,71 @@ Run on November 15, 2026 with the Rust program, prediction pushed first
 The codex stays 3,200 bytes whatever goes in, so the figure falls with the size of the body: about 0.000256 for 100 MB,
 0.0000256 for 1 GB, 0.00000256 for 10 GB.
 
+## enwik10 back from the pieces alone
+
+Run on November 15, 2026, predictions pushed first. In both runs the way back reads only the pieces: no copy of
+enwik10 and no store.
+
+**Three coloured leaves (Path 2).** The body is projected onto seven coprime cylinders, one leaf per cylinder. Any
+three leaves rebuild it. The projection and the recovery are the library
+[`path2-two-shadow-recovery`](https://github.com/JesseBrown1980/path2-two-shadow-recovery), unchanged; the wrapper
+in [`rust-leaves/`](rust-leaves/) only streams
+([`RESULT-ENWIK10-LEAVES-20261115.hbp`](rust-leaves/RESULT-ENWIK10-LEAVES-20261115.hbp)).
+
+| | Measured |
+|---|---|
+| Seven leaves of enwik10 | 5,000,000,000 bytes each, written in 552 seconds |
+| Rebuilt from leaves 2, 4, 6 alone | 10,000,000,000 bytes, SHA-256 `14a033c6…5f52`, equal to enwik10's, 1,018 seconds |
+| Leaves 0, 1 alone | held, 0 bytes emitted |
+| enwik8 from leaves 2, 4, 6, and again from leaves 0, 1, 2 | 100,000,000 bytes, identical, 11 seconds |
+| One bit changed in one enwik8 leaf, then rebuilt | SHA-256 `3834a93b…` against enwik8's `2b49720e…`: the rebuild is rejected |
+
+**Room codexes and the master key.** The body is divided as it streams in; each piece is coded against the master
+key into one codex of exactly 3,200 bytes, with an 8-byte stub per codex
+([`RESULT-REPROJECT-ENWIK10-20261115.hbp`](rust/RESULT-REPROJECT-ENWIK10-20261115.hbp)).
+
+| | Measured |
+|---|---|
+| Room codexes for enwik10 | 1,460,938 of 3,200 bytes: 4,675,001,600 bytes, with an 11,687,504-byte stub table |
+| Written back from the master key and the codexes | 10,000,000,000 bytes, SHA-256 equal to enwik10's |
+| Time | 520 seconds to divide, 542 seconds to write back |
+
+**Nine walls.** The walls program of November 13, unchanged, on a 3,795-byte piece taken from the middle of enwik10:
+the nine two-dimensional walls (47,552 bytes as a GGUF) rebuilt the three-dimensional body with every cell equal.
+
+A runnable example of the room codexes, with the first 95.8 MB of enwik10, is in the clean repository:
+[Quant-Anything-0-loss-Clean](https://github.com/JesseBrown1980/Quant-Anything-0-loss-Clean).
+
+```sh
+cargo build --release --manifest-path rust-leaves/Cargo.toml
+rust-leaves/target/release/path2_driver black BODY leaves/
+rust-leaves/target/release/path2_driver white leaves/ 2 4 6 BODY_BYTES body.back
+```
+
+## The paths and the chain
+
+The paths, in Jesse Daniel Brown's naming:
+
+- **Path 1** is black to white: two leaves.
+- **Path 2** is the other colours: more leaves, such as red, green and blue. The normal, anti and anti-anti versions
+  come from here.
+- **Path 3** is the n-dimensional watcher at any n position. Paths 5, 7, 11 and onward are variations of it.
+
+The chain he designed runs like this. The leaves become GGUF leaves. They are projected into the GPU and slices are
+taken there; the simple two-dimensional versions are saved. Each is quanted, using the quants, into something
+around 3.1 KB. Keep three, and the whole GGUF regenerates back into the GPU and is unpacked from there in seconds.
+The GPU is used once, on the way in; the way back does not need it again. If any one hash changes, the rebuild no
+longer matches and the system reports it as incomplete: that is the encryption and the hash working.
+
+The quants are catalogued in [Algorithms-of-Asolaria](https://github.com/JesseBrown1980/Algorithms-of-Asolaria):
+28 in the combined atlas and 62 entries in the wider lattice. The eight of the June engine fold a body into 1,024
+buckets and write a 3,200-byte tuple (Turbo 1,024, signs 128, Zeta 1,024, histogram 1,024). The Jesse quant is the
+law that composes them: quant at a level, write the exact representation, mint the cube, let the watchers check
+it, translate exactly to the next level, repeat.
+
+The links of the chain run so far, each with its rows in this repository: the leaves at 100 MB and 10 GB, the
+nine walls, the 3,200-byte codex of each body, the return by Path 1, and the room codexes with the master key.
+
 ## Try it in two minutes
 
 The codex programs are one Rust program: integers only, no Node, no V8, no dependencies. You need Rust 1.81 and `xz`
@@ -180,7 +245,8 @@ enwik9 record holder (fx2-cmix) is at 0.886.
 
 | Folder | Contents |
 |---|---|
-| [`rust/`](rust/) | The codex programs as one Rust 1.81 program, integers only: drill, train, enc, dec, resolve; with the rows of its byte-for-byte check |
+| [`rust/`](rust/) | The codex programs as one Rust 1.81 program, integers only: drill, train, enc, dec, resolve, pack, unpack; with the rows of its byte-for-byte check |
+| [`rust-leaves/`](rust-leaves/) | The leaves program: a streaming wrapper around the `path2-two-shadow-recovery` library, with the enwik10 prediction and result rows |
 | [`master-key/`](master-key/) | The 549,112-byte master key and the coded stream it decodes |
 | [`kernel-and-key/`](kernel-and-key/) | The Asolaria kernel and the constellation key (3,174 bytes each), the description of the three spheres, the playbook and the codebook. Two kernel files were on the machine with different contents; both are here, kept apart by name |
 | [`programs/`](programs/) | `kernel-pump/`: the fourteen July programs and their seed texts. `regenerate/`: the programs that rebuild large bodies from seeds. `tuple-engine-june/`: the engine that turns any input into a 3,200-byte tuple, with its stress log and proofs |
