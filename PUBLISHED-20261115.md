@@ -54,6 +54,8 @@ The 269,604,512-byte Mythos glyph body regenerates from `programs/kernel-pump/MY
 1. **Decode with the master key.** Put `master-key/masterkey.xz`, `master-key/stream.bin` and `master-key/order.txt` in an empty
    folder and run `node colour-qr-and-walls/roundtrip/dec.mjs <folder> 4194304`. The output equals the first 4,194,304 bytes of
    enwik8. No corpus is needed in the folder.
+   **Checked from this repository on November 15, 2026:** with only those three files in the folder, the decoded output has
+   sha256 `5ba647fec2ba51b0383cbe7147e15a478d85613245b7131c41764dbdd5062f77`, equal to the first 4,194,304 bytes of enwik8.
 2. **Make a codex.** `node enwik10-codex/drill3k.mjs <any file> <out.qr>` writes a 3,200-byte codex for any input.
 3. **Return a body by its codex.** `node enwik10-codex/resolve_path1.mjs <codex> <store index>` returns the body from a store that
    holds it (Path 1). A codex with no key, no kernel and no store returns nothing; that is the lock.
