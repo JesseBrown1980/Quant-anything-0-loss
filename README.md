@@ -17,6 +17,36 @@ Two different things in this work return data exactly, and they are kept apart:
    watcher, black mouth to white mouth) return data exactly from a small carried object plus a
    store or enough shadows. The atlas rule applies: the regimes are not collapsed into one ratio.
 
+## The programs in this repository
+
+This repository holds working programs with measured results, beside the documents that describe
+them. Each row below is a program that was run, with the number it gave. The operator's statement
+of how the codex system is used: *"you do need some megabytes of data to start but you do not need
+the original GGUF ... and you do not need the original data"*, and *"without the Asolaria KEY and
+the Asolaria kernel, you will regenerate 0."*
+
+| Program | What it does | Measured |
+|---|---|---|
+| [`crown-codec/rust/variants/vc65.rs`](crown-codec/rust/variants/vc65.rs) | Lossless compressor, output alone decodes | enwik9: 170,545,862 bytes, restored byte for byte on two machines on 2026-11-15 (1.3645 bits per character with the decoder charged) |
+| [`colour-qr-and-walls/roundtrip/train.mjs`](colour-qr-and-walls/roundtrip/train.mjs) | Streams the bodies through, keeps only the extracted function table (the master key), discards every chunk | master key 549,112 bytes |
+| [`colour-qr-and-walls/roundtrip/enc.mjs`](colour-qr-and-walls/roundtrip/enc.mjs), [`dec.mjs`](colour-qr-and-walls/roundtrip/dec.mjs), [`rc.mjs`](colour-qr-and-walls/roundtrip/rc.mjs) | Codes a body against the key; the decoder runs in a folder holding only the key, the stream and one small parameter file, with no corpus present | key + coded stream 1,711,250 bytes return the first 4,194,304 bytes of enwik8 exactly |
+| [`enwik10-codex/drill3k.mjs`](enwik10-codex/drill3k.mjs) | Any stream to a fixed 3,200-byte colour QR codex | enwik10, 10,000,000,000 bytes, twice, byte-identical codex |
+| [`enwik10-codex/resolve_path1.mjs`](enwik10-codex/resolve_path1.mjs) | Path 1: the codex names its body and the bytes return from the store | all 10,000,000,000 bytes, SHA-256 equal |
+| [`enwik10-codex/undrill.mjs`](enwik10-codex/undrill.mjs) | The codex with no key, no kernel and no store | 0 of 4,194,304 bytes: the lock holds |
+| [`colour-qr-and-walls/rime-walls/rime_walls_v29.py`](colour-qr-and-walls/rime-walls/rime_walls_v29.py) | Rebuilds a three-dimensional body from its two-dimensional walls | nine walls rebuild both test bodies cell for cell |
+| [`colour-qr-and-walls/switches/switches_v30.mjs`](colour-qr-and-walls/switches/switches_v30.mjs), [`panel/panel_v31.mjs`](colour-qr-and-walls/panel/panel_v31.mjs) | Function tables used as switches | the right node lights for held-out and unseen files; a nine-node panel codes mixed material 23.2% smaller than the best single node |
+| [`colour-qr-and-walls/hrm/hrm_v28.py`](colour-qr-and-walls/hrm/hrm_v28.py) | A small HRM (58,850 weights) on mazes it has not seen | 489 of 512 exact |
+
+Regeneration of large bodies from seeds (269,604,512 bytes from a 3,796-byte seed; 202,115,456 bytes
+from a 3,110-byte text; each equal to its recorded SHA-256) is recorded in
+[`colour-qr-and-walls/regenerate/`](colour-qr-and-walls/regenerate/) as specs and logs; the
+regenerating programs, the Asolaria KEY and the kernel are on the operator's machine and are not
+in this repository.
+
+Notes for anyone running these: the round-trip and codex programs carry the folder paths of the
+machine they were run on and need those edited; the Node programs need Node 24; some programs use
+floating point in training, as the scope section says.
+
 ## Two systems, kept apart
 
 There are two separate systems in this work. They share laws and file formats and they do
