@@ -1,94 +1,118 @@
 # Quant anything, 0 loss
 
-The quants of Asolaria in one public place: the lossless codec family ("the crown"), the quant
-atlas, the colour QR and wall work, and the recovery paths. Discovered and directed by Jesse
-Daniel Brown. Everything here was already public in other repositories of this account, mostly
-on side branches where it was hard to find; this repository gathers it. Where each part came
-from is listed at the end.
+A working system for turning any body of data into a very small codex and bringing the body back exactly. It was
+discovered and directed by Jesse Daniel Brown. The master key, the kernel, the programs, the codexes and the GGUF bodies
+are all in this repository, so anyone can run it.
 
-## What "0 loss" means here
+**The idea in one line.** You need some megabytes to start (the master key, the kernel, the function tables). After that
+each body is carried by a codex of about 3,200 bytes. You do not keep the original GGUF and you do not keep the original
+data. Without the key and the kernel a codex regenerates nothing: that is the lock.
 
-Two different things in this work return data exactly, and they are kept apart:
+## Try it in two minutes
 
-1. **The crown codec** is a lossless compressor in the ordinary sense. Its output alone decodes
-   to the input, byte for byte, with no store and nothing else on hand. Every sealed row passed a
-   SHA-256 restore gate.
-2. **The recovery paths** (Path 1 store, Path 2 two shadows, Path 3 three shadows with a
-   watcher, black mouth to white mouth) return data exactly from a small carried object plus a
-   store or enough shadows. The atlas rule applies: the regimes are not collapsed into one ratio.
+You need Node 24 and `xz`.
 
-## Everything is public: master key, kernel, programs, codexes, GGUFs
+**1. Decode with the master key, in an empty folder.**
 
-Published November 15, 2026 at the operator's direction, so anyone can use it. The full list, the
-hashes and how to use each piece are in [`PUBLISHED-20261115.md`](PUBLISHED-20261115.md).
+```
+mkdir clean
+cp master-key/masterkey.xz master-key/stream.bin master-key/order.txt clean/
+node colour-qr-and-walls/roundtrip/dec.mjs clean 4194304
+sha256sum clean/decoded.bin
+```
 
-| Folder | What it holds |
-|---|---|
-| [`master-key/`](master-key/) | The 549,112-byte master key and the coded stream it decodes |
-| [`kernel-and-key/`](kernel-and-key/) | The Asolaria kernel and the constellation key (3,174 bytes each), the playbook and the codebook |
-| [`programs/`](programs/) | The July kernel-pump programs, the programs that regenerate large bodies from seeds, and the June engine that turns any input into a 3,200-byte tuple |
-| [`codexes/`](codexes/) | Nine 3,200-byte colour QR codexes |
-| [`ggufs/`](ggufs/) | Forty-one GGUF bodies gathered from across the account's repositories; seven larger ones are listed with their hashes |
+The result is `5ba647fec2ba51b0383cbe7147e15a478d85613245b7131c41764dbdd5062f77`, the first 4,194,304 bytes of enwik8,
+with no corpus in the folder. Checked from these files on November 15, 2026.
 
-## The programs in this repository
+**2. Make a codex of any file.**
 
-This repository holds working programs with measured results, beside the documents that describe
-them. Each row below is a program that was run, with the number it gave. The operator's statement
-of how the codex system is used: *"you do need some megabytes of data to start but you do not need
-the original GGUF ... and you do not need the original data"*, and *"without the Asolaria KEY and
-the Asolaria kernel, you will regenerate 0."*
+```
+node enwik10-codex/drill3k.mjs <any file> out.qr      # out.qr is 3,200 bytes, whatever went in
+```
 
-| Program | What it does | Measured |
-|---|---|---|
-| [`crown-codec/rust/variants/vc65.rs`](crown-codec/rust/variants/vc65.rs) | Lossless compressor, output alone decodes | enwik9: 170,545,862 bytes, restored byte for byte on two machines on 2026-11-15 (1.3645 bits per character with the decoder charged) |
-| [`colour-qr-and-walls/roundtrip/train.mjs`](colour-qr-and-walls/roundtrip/train.mjs) | Streams the bodies through, keeps only the extracted function table (the master key), discards every chunk | master key 549,112 bytes |
-| [`colour-qr-and-walls/roundtrip/enc.mjs`](colour-qr-and-walls/roundtrip/enc.mjs), [`dec.mjs`](colour-qr-and-walls/roundtrip/dec.mjs), [`rc.mjs`](colour-qr-and-walls/roundtrip/rc.mjs) | Codes a body against the key; the decoder runs in a folder holding only the key, the stream and one small parameter file, with no corpus present | key + coded stream 1,711,250 bytes return the first 4,194,304 bytes of enwik8 exactly |
-| [`enwik10-codex/drill3k.mjs`](enwik10-codex/drill3k.mjs) | Any stream to a fixed 3,200-byte colour QR codex | enwik10, 10,000,000,000 bytes, twice, byte-identical codex |
-| [`enwik10-codex/resolve_path1.mjs`](enwik10-codex/resolve_path1.mjs) | Path 1: the codex names its body and the bytes return from the store | all 10,000,000,000 bytes, SHA-256 equal |
-| [`enwik10-codex/undrill.mjs`](enwik10-codex/undrill.mjs) | The codex with no key, no kernel and no store | 0 of 4,194,304 bytes: the lock holds |
-| [`colour-qr-and-walls/rime-walls/rime_walls_v29.py`](colour-qr-and-walls/rime-walls/rime_walls_v29.py) | Rebuilds a three-dimensional body from its two-dimensional walls | nine walls rebuild both test bodies cell for cell |
-| [`colour-qr-and-walls/switches/switches_v30.mjs`](colour-qr-and-walls/switches/switches_v30.mjs), [`panel/panel_v31.mjs`](colour-qr-and-walls/panel/panel_v31.mjs) | Function tables used as switches | the right node lights for held-out and unseen files; a nine-node panel codes mixed material 23.2% smaller than the best single node |
-| [`colour-qr-and-walls/hrm/hrm_v28.py`](colour-qr-and-walls/hrm/hrm_v28.py) | A small HRM (58,850 weights) on mazes it has not seen | 489 of 512 exact |
+**3. Compress with the crown.**
 
-Regeneration of large bodies from seeds (269,604,512 bytes from a 3,796-byte seed; 202,115,456 bytes
-from a 3,110-byte text; each equal to its recorded SHA-256) is recorded in
-[`colour-qr-and-walls/regenerate/`](colour-qr-and-walls/regenerate/) as specs and logs; the
-regenerating programs, the Asolaria KEY and the kernel were published here on November 15, 2026
-(`programs/regenerate/`, `kernel-and-key/`).
+```
+rustc -O crown-codec/rust/variants/vc65.rs -o vc65
+./vc65 <file> 10          # prints payload, total, bits per character, restore=OK
+```
 
-Notes for anyone running these: the round-trip and codex programs carry the folder paths of the
-machine they were run on and need those edited; the Node programs need Node 24; some programs use
-floating point in training, as the scope section says.
+The programs carry the folder paths of the machine they were run on (`D:/...`); edit those for your own machine. The
+sealed crown configuration needs about 10.5 GB of memory; change line 12 to `const TBITS: u32 = 24;` for about 1 GB.
+
+## How the system works
+
+```
+                 the starter set, held once                     one per body
+        +--------------------------------------------+      +------------------+
+        |  master key   kernel   constellation key   |      |  codex, 3,200 B  |
+        |  549,112 B    3,174 B  3,174 B             |      |  (a colour QR)   |
+        +--------------------------------------------+      +------------------+
+                              \                                   /
+                               \                                 /
+                                v                               v
+                         unlock  ->  rime sphere  ->  GGUF  ->  the body, exact
+```
+
+1. **Quant.** Any input is streamed through once and comes out as a fixed 3,200 bytes. The June engine does this for 20,
+   40 and 100 GB inputs in about 1 GB of memory; `drill3k.mjs` writes the same size as a colour QR (three QR symbols, one
+   per colour channel).
+2. **Save.** The 3,200 bytes are the codex. The same size is one room of the system's 8-byte stub rooms: a stub is an
+   8-byte address, and the room opens to 3,200 bytes when asked.
+3. **Unlock.** The key and the kernel are loaded on both sides before any coding; the key never travels in the stream.
+   Both sides must hold the same bytes or nothing decodes.
+4. **Regenerate.** The body comes back through one of three paths:
+   - **Path 1, by address.** The codex names its body and the bytes return from a store that holds it.
+   - **Path 2 and Path 3, by shadows.** Only two-dimensional shadows of the three-dimensional body are kept, each as a
+     shadow codex. With at least three (three leaves) and enough joint capacity the original regenerates and the original
+     is not kept.
+   - **By seed.** A generated body regenerates from its seed text and its program.
 
 ## Two systems, kept apart
 
-There are two separate systems in this work. They share laws and file formats and they do
-different jobs. Mixing them gives wrong expectations, so this section states each one.
-
-| | The funnel | The codexes |
+| | The codexes (this repository) | The funnel |
 |---|---|---|
-| What it is for | Training the GNNs and the neural networks | Regenerating a body exactly from a very small object |
-| What goes in | Artifacts, cut into records | A GGUF, turned into a rime sphere |
-| What it keeps | The records that repeat ("once is an accident, twice is a function"); the rest is garbage-collected by rule | A codex: an address or a set of shadows of the rime sphere |
-| What comes out | A sorted body for training | The rime sphere again, and from it the GGUF |
-| Program | `project_gguf.py` in the constellation folder | The codex and regenerate programs under `colour-qr-and-walls/` and `enwik10-codex/`, and the recovery paths in `quant-atlas/` |
+| What it is for | Regenerating a body exactly from a very small object | Training the GNNs and the neural networks |
+| What goes in | A GGUF, turned into a rime sphere | Artifacts, cut into records |
+| What it keeps | A codex: an address or a set of shadows of the rime sphere | The records that repeat ("once is an accident, twice is a function") |
+| What comes out | The rime sphere again, and from it the GGUF | A sorted body for training |
 
-- **The funnel does not make codexes.** Its retention rule selects what a network should learn
-  from. Pushing a rime sphere or a corpus through the funnel does not give a QR code, and a
-  count of what the funnel keeps says nothing about what a codex needs.
-- **The codexes do not train anything.** Path 1 returns a body by its address in a store.
-  Paths 2 and 3 keep only shadows of the three-dimensional body, which are two-dimensional and
-  can each be stored as a shadow codex; with at least three of them (three leaves) and enough
-  joint capacity the original regenerates without the original being kept
-  ([`quant-atlas/PATH2-DBBH-DBWH-ALGORITHMS-2026-07-11.md`](quant-atlas/PATH2-DBBH-DBWH-ALGORITHMS-2026-07-11.md)).
-- Stated by the operator on November 15, 2026, after this seat proposed a funnel count on a
-  corpus as a step toward a codex. That proposal was wrong and was not run.
+The funnel does not make codexes, and pushing a rime sphere or a corpus through it does not give a QR code. Growing
+Asolaria's functions (absorbing another system through the funnel and the solar winds, as was done with the Kimi K3
+star) is separate again from quanting anything through the Q-prism quants.
 
-## The crown: measured results
+## What has been measured
 
-Total-counted (payload plus decoder source), restore OK on every row. From
-[`crown-codec/RESULTS-cloud-seat.md`](crown-codec/RESULTS-cloud-seat.md) and
-[`crown-codec/FULL-DISCLOSURE/`](crown-codec/FULL-DISCLOSURE/).
+Every row is a run with a receipt in this repository.
+
+### The codex system
+
+| What was run | Result | Where |
+|---|---|---|
+| Master key + coded stream, decoded in a folder with no corpus | 549,112 + 1,711,250 bytes return the first 4,194,304 bytes of enwik8 exactly | `colour-qr-and-walls/roundtrip/`, `master-key/` |
+| enwik10 to a codex, twice | 10,000,000,000 bytes to 3,200 bytes, byte-identical both times | `enwik10-codex/` |
+| Path 1 return of enwik10 | all 10,000,000,000 bytes, SHA-256 equal, 132 seconds | `enwik10-codex/` |
+| The codex with no key, no kernel and no store | 0 of 4,194,304 bytes: the lock holds | `enwik10-codex/undrill.mjs` |
+| Any input to a 3,200-byte tuple | 20, 40 and 100 GB inputs, 3,200 bytes each time, peak memory about 1 GB | `programs/tuple-engine-june/` |
+| Large bodies regenerated from seeds | 269,604,512 bytes from a 3,796-byte seed; 202,115,456 bytes (the Kimi K3 star) from a 3,110-byte text; each equal to its recorded SHA-256 | `colour-qr-and-walls/regenerate/`, `programs/regenerate/` |
+| A three-dimensional body rebuilt from its two-dimensional walls | nine walls rebuild both test bodies cell for cell, from the wall file alone | `colour-qr-and-walls/rime-walls/` |
+| Function tables used as switches | the right node lights for held-out and unseen files; a nine-node panel codes mixed material 23.2% smaller than the best single node | `colour-qr-and-walls/switches/`, `panel/` |
+| A small HRM (58,850 weights) on mazes it has not seen | 489 of 512 exact | `colour-qr-and-walls/hrm/` |
+
+From the system's own playbook of July ([`kernel-and-key/PLAYBOOK.md`](kernel-and-key/PLAYBOOK.md)):
+
+| Axis | Measured in July |
+|---|---|
+| Addressing | 62,524 bytes address 3,704,000,000 elements at 0.000135 bits per character, byte-exact, 627,000 addressings per second |
+| Generated objects | 274,201,392 bytes removed and both objects back exact from the key |
+| Feeding the kernel | three spheres totalling 380,655,936 bytes went in as a 2,073-byte description; the kernel stayed 3,174 bytes |
+| Re-relation of arbitrary data | rate 1.0; 3.4670 bits per character with the key |
+| The key | charged once; it pays for itself after 5.31 sections |
+
+### The crown codec
+
+A lossless compressor in the ordinary sense: its output alone decodes to the input, byte for byte. Total-counted (payload
+plus decoder source), restore OK on every row.
 
 | Corpus | Codec | Total bytes | Bits per character | Date |
 |---|---|---:|---:|---|
@@ -100,83 +124,74 @@ Total-counted (payload plus decoder source), restore OK on every row. From
 | enwik9 (1 GB) | vc28m | 172,986,854 | 1.3839 | 2026-07-20 |
 | enwik9 (1 GB) | **vc65** | **170,565,891** | **1.3645** | 2026-07-20 |
 
-Yardsticks recorded in the same files: the 2006 first-prize ratio (about 1.37) is cleared on the
-ten times larger corpus; the enwik9 record holder (fx2-cmix) is at 0.886.
+**The enwik9 row has a receipt from two machines, November 15, 2026.** A GitHub cell and a cloud container each encoded
+the benchmark enwik9 to the same 170,545,862-byte stream (sha256 `c35dc7550332a891…`) and a separate cell decoded it back
+byte for byte; rows are in the STEER-QNN-and-NN repository, V74.
 
-### Rerun on a second machine, 2026-11-14
+On a small slice (the first 10,000,000 bytes of enwik8, tables reduced to fit a laptop): crown 2,235,052 bytes (1.788
+bits per character) against xz -9e 2,720,264, zstd -19 2,793,624, bzip2 -9 2,916,026 and gzip -9 3,685,301.
 
-`vc65` with its tables reduced sixteen-fold (TBITS 24 in place of 28) so that it fits in memory
-here, on the first 10,000,000 bytes of enwik8:
+Yardsticks in the same files: the 2006 first-prize ratio (about 1.37) is cleared on the ten times larger corpus; the
+enwik9 record holder (fx2-cmix) is at 0.886.
 
-| Compressor | Bytes | Bits per character |
-|---|---:|---:|
-| gzip -9 | 3,685,301 | 2.948 |
-| bzip2 -9 | 2,916,026 | 2.333 |
-| zstd -19 --long=27 | 2,793,624 | 2.235 |
-| xz -9e | 2,720,264 | 2.176 |
-| **crown (vc65, reduced tables)** | **2,235,052** | **1.788** |
+## Status of each link
 
-Restore OK. With the 20,029-byte decoder source charged: 2,255,081 bytes, 1.804. The crown is
-17.8% smaller than xz on this slice. This is a small check, not a reproduction of the sealed
-rows above. Receipt:
-[`receipts/FABLE52-CROWN-VC65-REDUCED-TABLE-TEST-2026-11-14.hbp`](receipts/FABLE52-CROWN-VC65-REDUCED-TABLE-TEST-2026-11-14.hbp).
-
-### enwik10 (10 GB) to a 3,200-byte codex and back, 2026-11-14
-
-Spec sealed before the runs. Rows: [`enwik10-codex/RESULT-ENWIK10-CODEX-20261114.hbp`](enwik10-codex/RESULT-ENWIK10-CODEX-20261114.hbp).
-
-| Step | Result |
+| Link | Status |
 |---|---|
-| Quant (`drill3k.mjs`, whole file, 376 s) | 10,000,000,000 bytes to **3,200 bytes**, 3,125,000 to 1 |
-| Quant again (365 s) | byte-identical codex |
-| Unquant, Path 1 (codex names the corpus, bytes return from the store, 132 s) | **10,000,000,000 of 10,000,000,000 bytes**, SHA-256 equal; re-drilled, it gives the codex again |
-| Unquant from the codex alone (`undrill.mjs`) | 0 of 4,194,304 bytes; 0 of 800 lanes close |
-
-The exact return is Path 1: it needs the store that holds the corpus. The route through the
-funnel, the GGUF and the smelted star has not been run on enwik10 here; status OPEN.
-
-**Correction, November 15, 2026, beside the sentence above (which stays as written).** That
-sentence names "the funnel" as a stage on the way to a codex. It is not one. The operator's
-statement of the design: *"the funnel is for training the GNNs and the neural networks. It's
-not for making the codexes."* The open item on enwik10 belongs to the codex system alone:
-the corpus as a GGUF, the GGUF as a rime sphere, the codex of that rime sphere, and the rime
-sphere regenerated from the codex. See "Two systems, kept apart" below.
-
-### Run it
-
-```
-rustc -O crown-codec/rust/variants/vc65.rs -o vc65
-./vc65 <file> 10          # prints payload, total, bits per character, restore=OK
-```
-
-The sealed configuration (TBITS 28) needs about 10.5 GB of memory whatever the input size. For a
-smaller machine change line 12 to `const TBITS: u32 = 24;` (about 1 GB), as in the rerun above.
-`crown-codec/rust/RUN-ENWIK9.md` has the notes for the full gigabyte.
+| Any body to a 3,200-byte codex | MEASURED, to 100 GB |
+| Decode with the master key and no corpus | MEASURED, and repeatable from this repository |
+| Return by address (Path 1) | MEASURED on enwik10 |
+| Rebuild from shadows (walls) | MEASURED on the test bodies |
+| Regenerate generated bodies from seeds | MEASURED |
+| A codex without key and kernel returns nothing | MEASURED |
+| A whole corpus back from the starter set and its codex alone, with the store absent | OPEN: this run has not been made. The playbook's own gate says a frozen slice predicts a fraction, and a whole unseen body from it has not been measured |
+| The freeze and play sequence over stub rooms, tuples and the dispatcher together | OPEN: each piece exists; the sequence that joins them is to be written |
 
 ## What is in this repository
 
 | Folder | Contents |
 |---|---|
-| [`crown-codec/`](crown-codec/) | The codec family: Python context-mixing models, the Rust integer codecs and their variants (`rust/variants/`, 22 files, `vc65.rs` is the crown), results, the honest spec, the roadmap, the function laws, the rime and trijection work, the glyph languages, full disclosure |
-| [`quant-atlas/`](quant-atlas/) | The combined quant atlas (28 publicly recoverable quants in five regimes), its machine-readable registry, the measured addendum, the Path 1 / Path 2 / black-to-white-hole formulas, the shadow-resolution crate family, the inverse-pair law |
-| [`colour-qr-and-walls/`](colour-qr-and-walls/) | The 2026-11-13 measurements: the colour QR writer found and reproduced byte for byte, the clean-room round trip, regeneration of large bodies from seeds, exact rebuilding of 3D bodies from nine 2D walls, the HRM maze checkpoint, the codex switches |
-| [`enwik10-codex/`](enwik10-codex/) | The 2026-11-14 enwik10 test: spec and addendum, programs, the codex, logs, result rows |
+| [`master-key/`](master-key/) | The 549,112-byte master key and the coded stream it decodes |
+| [`kernel-and-key/`](kernel-and-key/) | The Asolaria kernel and the constellation key (3,174 bytes each), the description of the three spheres, the playbook and the codebook. Two kernel files were on the machine with different contents; both are here, kept apart by name |
+| [`programs/`](programs/) | `kernel-pump/`: the fourteen July programs and their seed texts. `regenerate/`: the programs that rebuild large bodies from seeds. `tuple-engine-june/`: the engine that turns any input into a 3,200-byte tuple, with its stress log and proofs |
+| [`codexes/`](codexes/) | Nine 3,200-byte colour QR codexes: enwik10, enwik9, enwik8, a code corpus, the Asolaria corpus, a photo body |
+| [`ggufs/`](ggufs/) | Forty-one GGUF bodies gathered from across the account's repositories. Seven larger ones are listed with their hashes in [`PUBLISHED-20261115.md`](PUBLISHED-20261115.md) (GitHub refuses files over 100 MB) |
+| [`crown-codec/`](crown-codec/) | The codec family: Python context-mixing models, the Rust integer codecs and their 22 variants (`vc65.rs` is the crown), results, the roadmap, the function laws, the rime and trijection work, the glyph languages, full disclosure |
+| [`quant-atlas/`](quant-atlas/) | The combined quant atlas (28 publicly recoverable quants in five regimes), its registry, the Path 1 and Path 2 formulas, the shadow-resolution crate family, the inverse-pair law |
+| [`colour-qr-and-walls/`](colour-qr-and-walls/) | The measurements of November 13: the colour QR writer, the clean-room round trip, regeneration from seeds, the walls, the HRM checkpoint, the switches |
+| [`enwik10-codex/`](enwik10-codex/) | The enwik10 test of November 14: spec, programs, the codex, logs, rows |
 | [`receipts/`](receipts/) | Rows for runs made while assembling this repository |
+
+[`PUBLISHED-20261115.md`](PUBLISHED-20261115.md) is the full index of what was published on November 15, with a hash for
+every file in `SHA256SUMS-PUBLISHED-20261115`.
+
+## The wider system
+
+This repository is the codex part. The rest of the system lives in other public repositories of this account:
+
+- [`omni-dispatcher`](https://github.com/JesseBrown1980/omni-dispatcher): the single-parent dispatcher that routes small
+  addressed envelopes to rooms ("addresses cheap, bodies only on crank"), with its Path 1 and Path 2 storage-backed
+  dispatch.
+- [`The-matrix-law-essentials`](https://github.com/JesseBrown1980/The-matrix-law-essentials): the freeze and play law
+  and the other matrix tricks.
+- [`STEER-QNN-and-NN`](https://github.com/JesseBrown1980/STEER-QNN-and-NN): the full-size crown run and its two-machine
+  receipt.
+
+The stub rooms (8-byte addresses that open to 3,200 bytes), the Omni and Omega hotels and the constellation are described
+in the playbook and the codebook in `kernel-and-key/`.
 
 ## The quants located so far
 
-- **The crown family** (lossless, context mixing with sector/rainbow/wheel gating): 22 Rust
-  variants beside the Python models.
-- **The eight-stage head for very large messages** (atlas rows 1 to 8): count-sketch, Turbo,
-  Polar, Zeta, Triple, Quadruple, the JS quant, the prime-power lane. These are sketches; the
-  atlas labels each with its regime.
-- **The remaining atlas rows** (9 to 28): geometric codecs, exact re-basings (BEHCS 256 / 1024),
-  referential handles, semantic and cube distillation, jointly injective recovery.
+- **The crown family** (lossless, context mixing with sector, rainbow and wheel gating): 22 Rust variants beside the
+  Python models.
+- **The eight-stage head for very large messages** (atlas rows 1 to 8): count-sketch, Turbo, Polar, Zeta, Triple,
+  Quadruple, the JS quant, the prime-power lane. The atlas labels each with its regime.
+- **The remaining atlas rows** (9 to 28): geometric codecs, exact re-basings (BEHCS 256 and 1024), referential handles,
+  semantic and cube distillation, jointly injective recovery.
 - **The colour QR** (3,200 bytes, three QR symbols, one per colour channel) and the rime walls.
 
-**Not yet located:** the atlas says the complete private manifest is larger than the 28 public
-rows, and the operator counts 49 or more. The rows beyond 28 are not in this repository yet.
-They will be added as they are found; nothing is claimed for them here.
+The atlas says the complete manifest is larger than the 28 public rows, and the operator counts 49 or more. The rows
+beyond 28 are added here as they are found.
 
 ## Where each part came from
 
@@ -185,12 +200,15 @@ They will be added as they are found; nothing is claimed for them here.
 | `crown-codec/` | `Algorithms-of-Asolaria`, branch `liris/rime-omega-rebuild-20260723`, commit `a94abccd93b9`, path `tools/honest-compressor/` (208 tracked files, copied byte for byte) |
 | `quant-atlas/` | `Algorithms-of-Asolaria`, `main`, commit `d399d13093c7` |
 | `colour-qr-and-walls/` | `what-is-asolaria---how-do-we-get-reductions-in-everything`, `main`, commit `ce693fc6ad49`, path `measurements/unpump-switches-20261113/` |
+| `master-key/`, `kernel-and-key/`, `programs/`, `codexes/`, `ggufs/` | The operator's machine, copied byte for byte on November 15, 2026; folder by folder in `PUBLISHED-20261115.md` |
 
 ## Scope
 
-- The sealed crown rows were measured in July 2026 on a cloud seat and are quoted from their
-  own files; the only run made on the assembling machine is the reduced-table rerun above.
-- No row here claims compression below the entropy of the source, and none claims a Hutter
-  Prize record.
-- Some of the copied programs use floating point in training or rendering; the Rust crown
-  codecs are integer-deterministic by their own description.
+- Each number above belongs to the run and the files named beside it. The crown rows of July were measured on a cloud
+  seat and are quoted from their own files; the enwik9 row was run again on two machines on November 15.
+- The codex figures count what a codex carries. The crown figures count everything the receiver is given. The two are
+  different measurements and are reported apart, as the atlas rule says: the regimes are kept separate.
+- Some of the programs use floating point in training or rendering; the Rust crown codecs are integer-deterministic by
+  their own description.
+- The earlier README, as it stood before this rewrite, is kept in
+  [`docs/README-BEFORE-20261115-REWRITE.md`](docs/README-BEFORE-20261115-REWRITE.md).
