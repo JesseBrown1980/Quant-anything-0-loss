@@ -113,11 +113,12 @@ Every row is a run with a receipt in this repository.
 
 | What was run | Result | Where |
 |---|---|---|
-| Master key + coded stream, decoded in a folder with no corpus | 549,112 + 1,711,250 bytes return the first 4,194,304 bytes of enwik8 exactly | `colour-qr-and-walls/roundtrip/`, `master-key/` |
-| enwik10 to a codex, twice | 10,000,000,000 bytes to 3,200 bytes, byte-identical both times | `enwik10-codex/` |
+| Master key + coded stream, decoded in a folder with no corpus | 549,112 + 1,711,250 bytes return the first 4,194,304 bytes of enwik8 exactly; repeated by the Rust program and by a GitHub workflow on every change | `rust/`, `master-key/` |
+| enwik10 to a codex, twice | 10,000,000,000 bytes to 3,200 bytes, byte-identical both times | `enwik10-codex/`, `codexes/` |
 | Path 1 return of enwik10 | all 10,000,000,000 bytes, SHA-256 equal, 132 seconds | `enwik10-codex/` |
-| The codex with no key, no kernel and no store | 0 of 4,194,304 bytes: the lock holds | `enwik10-codex/undrill.mjs` |
+| The codex with no key, no kernel and no store | 0 of 4,194,304 bytes: the lock holds | `enwik10-codex/` |
 | Any input to a 3,200-byte tuple | 20, 40 and 100 GB inputs, 3,200 bytes each time, peak memory about 1 GB | `programs/tuple-engine-june/` |
+| The codex programs in Rust, integers only | codexes of enwik8, the Asolaria corpus and the code corpus, the master key, the coded stream and the decode: each byte-identical to the published files; 100 MB drilled in under 2 seconds | `rust/` |
 | Large bodies regenerated from seeds | 269,604,512 bytes from a 3,796-byte seed; 202,115,456 bytes (the Kimi K3 star) from a 3,110-byte text; each equal to its recorded SHA-256 | `colour-qr-and-walls/regenerate/`, `programs/regenerate/` |
 | A three-dimensional body rebuilt from its two-dimensional walls | nine walls rebuild both test bodies cell for cell, from the wall file alone | `colour-qr-and-walls/rime-walls/` |
 | Function tables used as switches | the right node lights for held-out and unseen files; a nine-node panel codes mixed material 23.2% smaller than the best single node | `colour-qr-and-walls/switches/`, `panel/` |
@@ -157,19 +158,6 @@ bits per character) against xz -9e 2,720,264, zstd -19 2,793,624, bzip2 -9 2,916
 
 Yardsticks in the same files: the 2006 first-prize ratio (about 1.37) is cleared on the ten times larger corpus; the
 enwik9 record holder (fx2-cmix) is at 0.886.
-
-## Status of each link
-
-| Link | Status |
-|---|---|
-| Any body to a 3,200-byte codex | MEASURED, to 100 GB |
-| Decode with the master key and no corpus | MEASURED, and repeatable from this repository |
-| Return by address (Path 1) | MEASURED on enwik10 |
-| Rebuild from shadows (walls) | MEASURED on the test bodies |
-| Regenerate generated bodies from seeds | MEASURED |
-| A codex without key and kernel returns nothing | MEASURED |
-| A whole corpus back from the starter set and its codex alone, with the store absent | OPEN: this run has not been made. The playbook's own gate says a frozen slice predicts a fraction, and a whole unseen body from it has not been measured |
-| The freeze and play sequence over stub rooms, tuples and the dispatcher together | OPEN: each piece exists; the sequence that joins them is to be written |
 
 ## What is in this repository
 
@@ -233,7 +221,7 @@ beyond 28 are added here as they are found.
   seat and are quoted from their own files; the enwik9 row was run again on two machines on November 15.
 - The codex figures count what a codex carries. The crown figures count everything the receiver is given. The two are
   different measurements and are reported apart, as the atlas rule says: the regimes are kept separate.
-- Some of the programs use floating point in training or rendering; the Rust crown codecs are integer-deterministic by
-  their own description.
+- The codex program in `rust/` and the Rust crown codecs are integer programs. The earlier Node and Python programs are
+  kept in their folders as the originals; some of them use floating point in training or rendering.
 - The earlier README, as it stood before this rewrite, is kept in
   [`docs/README-BEFORE-20261115-REWRITE.md`](docs/README-BEFORE-20261115-REWRITE.md).

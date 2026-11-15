@@ -51,23 +51,25 @@ The 269,604,512-byte Mythos glyph body regenerates from `programs/kernel-pump/MY
 
 ## How the pieces are used
 
-1. **Decode with the master key.** Put `master-key/masterkey.xz`, `master-key/stream.bin` and `master-key/order.txt` in an empty
-   folder and run `node colour-qr-and-walls/roundtrip/dec.mjs <folder> 4194304`. The output equals the first 4,194,304 bytes of
-   enwik8. No corpus is needed in the folder.
-   **Checked from this repository on November 15, 2026:** with only those three files in the folder, the decoded output has
-   sha256 `5ba647fec2ba51b0383cbe7147e15a478d85613245b7131c41764dbdd5062f77`, equal to the first 4,194,304 bytes of enwik8.
-2. **Make a codex.** `node enwik10-codex/drill3k.mjs <any file> <out.qr>` writes a 3,200-byte codex for any input.
-3. **Return a body by its codex.** `node enwik10-codex/resolve_path1.mjs <codex> <store index>` returns the body from a store that
-   holds it (Path 1). A codex with no key, no kernel and no store returns nothing; that is the lock.
-4. **Regenerate a body from its seed.** The programs in `programs/regenerate/` rebuild the large generated bodies from the seed
+Build the Rust program once: `cd rust && cargo build --release`. It is `rust/target/release/asolaria_codex` below.
+
+1. **Decode with the master key.** `xz -d -c master-key/masterkey.xz > key.raw`, then
+   `asolaria_codex dec key.raw 2 master-key/stream.bin 4194304 decoded.bin`. The output is the first 4,194,304 bytes of
+   enwik8, sha256 `5ba647fec2ba51b0383cbe7147e15a478d85613245b7131c41764dbdd5062f77`, from the key and the stream alone.
+   Checked from this repository on November 15, 2026, and repeated by a workflow on every change.
+2. **Make a codex.** `asolaria_codex drill <any file> out.qr` writes a 3,200-byte codex for any input.
+3. **Make your own key and code against it.** `asolaria_codex train key.raw 2 body1 body2`, then `enc` and `dec`.
+4. **Return a body by its codex.** `asolaria_codex resolve <codex> <store index>` returns the body from a store that holds it
+   (Path 1). A codex with no key, no kernel and no store returns nothing; that is the lock.
+5. **Regenerate a body from its seed.** The programs in `programs/regenerate/` rebuild the large generated bodies from the seed
    texts.
-5. **Read the guide.** `kernel-and-key/PLAYBOOK.md` is how the system is played; `kernel-and-key/CODEBOOK.md` lists the laws and
+6. **Read the guide.** `kernel-and-key/PLAYBOOK.md` is how the system is played; `kernel-and-key/CODEBOOK.md` lists the laws and
    what each one measured.
 
 ## Notes for anyone running these
 
-- The programs carry the folder paths of the machine they ran on (`D:/...`); edit them for your own machine.
-- The June engine imports the shipped engines of the `asolaria-as-neural-network` repository by path.
-- Some programs use floating point in training or rendering; the scope section of the README says which results are integer.
+- The Rust program takes every path as an argument and needs Rust 1.81 only.
+- The earlier Node and Python programs carry the folder paths of the machine they ran on (`D:/...`); the June engine imports the
+  shipped engines of the `asolaria-as-neural-network` repository by path.
 - Left on the machine and not published in this pass: temporary files of the kernel-pump folder (names beginning with an
   underscore), `DENIAL-INVENTORY.txt`, and the 33.5 MB uncompressed copy of the master key (it is `xz -d` of `masterkey.xz`).
