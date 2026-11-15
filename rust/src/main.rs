@@ -8,6 +8,8 @@
 //!   enc     KEY.raw ORDER INPUT N OUT        code the first N bytes of INPUT against the key     (roundtrip/enc.mjs)
 //!   dec     KEY.raw ORDER STREAM N OUT       decode N bytes from the key and the stream alone    (roundtrip/dec.mjs)
 //!   resolve CODEX STORE-INDEX.hbp            Path 1: the codex names its body, the store returns it (resolve_path1.mjs)
+//!   pack    KEY.raw ORDER INPUT ROOMS STUBS [MAX_ROOMS]   divide the body, as it streams, into 3,200-byte room codexes
+//!   unpack  KEY.raw ORDER ROOMS OUT          the body again, from the key and the rooms alone
 //!
 //! The `.mjs` programs compute a probability as Math.round(((b + 0.4) / (a + b + 0.8)) * S) in IEEE-754 doubles. This
 //! program reproduces that value with integers only (see `prob`), so its outputs are the published bytes.
@@ -318,6 +320,10 @@ impl Enc {
             self.shift_low();
         }
     }
+    /// Bytes the stream would have if it were closed now.
+    fn closed_len(&self) -> usize {
+        self.out.len() + self.pending as usize + 5
+    }
     fn finish(mut self) -> Vec<u8> {
         for _ in 0..5 {
             self.shift_low();
@@ -415,6 +421,112 @@ fn dec(key: &str, order: usize, stream: &str, n: usize, out: &str) -> Result<(),
     Ok(())
 }
 
+// ---------------------------------------------------------------- rooms: the body divided into 3,200-byte codexes
+//
+// The body is divided as it streams in. Each piece is coded against the master key into one room of exactly ROOM
+// bytes: two bytes of piece length, the coded piece, zero padding. A piece ends when its coded form has filled the
+// room. Every room decodes by itself from the key, so the rooms and the key return the body with no store. Beside the
+// rooms goes a table of 8-byte stubs, one per room (the first 8 bytes of the room's SHA-256).
+const ROOM: usize = 3200;
+const ROOM_MARGIN: usize = 16; // one more byte can add at most 12 bytes of code
+
+fn pack(key: &str, order: usize, input: &str, rooms_out: &str, stubs_out: &str, max_rooms: u64) -> Result<(), String> {
+    let p = load_key(key, order)?;
+    let mut f = std::io::BufReader::with_capacity(1 << 22, File::open(input).map_err(|e| format!("{input}: {e}"))?);
+    let mut rooms = std::io::BufWriter::with_capacity(1 << 22, File::create(rooms_out).map_err(|e| format!("{rooms_out}: {e}"))?);
+    let mut stubs = std::io::BufWriter::new(File::create(stubs_out).map_err(|e| format!("{stubs_out}: {e}"))?);
+    let (mut count, mut body, mut least, mut most) = (0u64, 0u64, usize::MAX, 0usize);
+    let mut e = Enc::new();
+    let (mut c1, mut c2, mut n) = (0usize, 0usize, 0usize);
+    let mut close = |e: Enc, n: usize, count: &mut u64, least: &mut usize, most: &mut usize| -> Result<(), String> {
+        let code = e.finish();
+        let mut room = vec![0u8; ROOM];
+        room[..2].copy_from_slice(&(n as u16).to_le_bytes());
+        room[2..2 + code.len()].copy_from_slice(&code);
+        let mut h = Sha256::new();
+        h.update(&room);
+        let hex = h.hex();
+        let stub: Vec<u8> = (0..8).map(|i| u8::from_str_radix(&hex[2 * i..2 * i + 2], 16).unwrap_or(0)).collect();
+        rooms.write_all(&room).map_err(|x| x.to_string())?;
+        stubs.write_all(&stub).map_err(|x| x.to_string())?;
+        *count += 1;
+        *least = (*least).min(n);
+        *most = (*most).max(n);
+        Ok(())
+    };
+    let mut byte = [0u8; 1];
+    loop {
+        if f.read(&mut byte).map_err(|x| x.to_string())? == 0 {
+            break;
+        }
+        let b = byte[0];
+        let base = if order == 1 { c1 } else { (c2 << 8) | c1 } * 256;
+        let mut node = 1usize;
+        for k in (0..8).rev() {
+            let bit = (b >> k) & 1;
+            e.bit(p[base + node], bit);
+            node = (node << 1) | usize::from(bit);
+        }
+        c2 = c1;
+        c1 = usize::from(b);
+        n += 1;
+        body += 1;
+        if e.closed_len() + ROOM_MARGIN > ROOM - 2 || n == 65535 {
+            close(std::mem::replace(&mut e, Enc::new()), n, &mut count, &mut least, &mut most)?;
+            (c1, c2, n) = (0, 0, 0);
+            if count == max_rooms {
+                break;
+            }
+        }
+    }
+    if n > 0 {
+        close(e, n, &mut count, &mut least, &mut most)?;
+    }
+    rooms.flush().map_err(|x| x.to_string())?;
+    stubs.flush().map_err(|x| x.to_string())?;
+    println!(
+        "PACK|body_bytes_taken={body}|rooms={count}|room_bytes={ROOM}|rooms_file_bytes={}|stub_table_bytes={}|least_piece_bytes={least}|most_piece_bytes={most}|mean_piece_bytes={}|json=0",
+        count * ROOM as u64,
+        count * 8,
+        if count > 0 { body / count } else { 0 }
+    );
+    Ok(())
+}
+
+fn unpack(key: &str, order: usize, rooms_in: &str, out: &str) -> Result<(), String> {
+    let p = load_key(key, order)?;
+    let mut f = std::io::BufReader::with_capacity(1 << 22, File::open(rooms_in).map_err(|e| format!("{rooms_in}: {e}"))?);
+    let mut w = std::io::BufWriter::with_capacity(1 << 22, File::create(out).map_err(|e| format!("{out}: {e}"))?);
+    let mut h = Sha256::new();
+    let mut room = vec![0u8; ROOM];
+    let (mut count, mut total) = (0u64, 0u64);
+    let mut piece: Vec<u8> = Vec::with_capacity(65536);
+    while f.read_exact(&mut room).is_ok() {
+        let n = usize::from(u16::from_le_bytes([room[0], room[1]]));
+        let mut d = Dec::new(&room[2..]);
+        let (mut c1, mut c2) = (0usize, 0usize);
+        piece.clear();
+        for _ in 0..n {
+            let base = if order == 1 { c1 } else { (c2 << 8) | c1 } * 256;
+            let mut node = 1usize;
+            for _ in 0..8 {
+                node = (node << 1) | d.bit(p[base + node]);
+            }
+            let b = (node & 0xFF) as u8;
+            piece.push(b);
+            c2 = c1;
+            c1 = usize::from(b);
+        }
+        h.update(&piece);
+        w.write_all(&piece).map_err(|x| x.to_string())?;
+        count += 1;
+        total += n as u64;
+    }
+    w.flush().map_err(|x| x.to_string())?;
+    println!("UNPACK|rooms={count}|body_bytes={total}|body_sha256={}|inputs=key_and_rooms_only|json=0", h.hex());
+    Ok(())
+}
+
 // ---------------------------------------------------------------- Path 1: the codex names its body
 fn resolve(codex: &str, index: &str) -> Result<(), String> {
     let (name, n) = sha_of_file(codex)?;
@@ -442,7 +554,9 @@ fn run(a: &[String]) -> Result<(), String> {
         (Some("enc"), 7) => enc(&a[2], num(&a[3])?, &a[4], num(&a[5])?, &a[6]),
         (Some("dec"), 7) => dec(&a[2], num(&a[3])?, &a[4], num(&a[5])?, &a[6]),
         (Some("resolve"), 4) => resolve(&a[2], &a[3]),
-        _ => Err("usage: asolaria_codex drill SRC OUT.qr | train KEY.raw ORDER FILE[:LIMIT]... | enc KEY.raw ORDER INPUT N OUT | dec KEY.raw ORDER STREAM N OUT | resolve CODEX STORE-INDEX.hbp".into()),
+        (Some("pack"), 7 | 8) => pack(&a[2], num(&a[3])?, &a[4], &a[5], &a[6], a.get(7).map_or(u64::MAX, |x| x.parse::<u64>().unwrap_or(u64::MAX))),
+        (Some("unpack"), 6) => unpack(&a[2], num(&a[3])?, &a[4], &a[5]),
+        _ => Err("usage: asolaria_codex drill SRC OUT.qr | train KEY.raw ORDER FILE[:LIMIT]... | enc KEY.raw ORDER INPUT N OUT | dec KEY.raw ORDER STREAM N OUT | resolve CODEX STORE-INDEX.hbp | pack KEY.raw ORDER INPUT ROOMS STUBS [MAX_ROOMS] | unpack KEY.raw ORDER ROOMS OUT".into()),
     }
 }
 
