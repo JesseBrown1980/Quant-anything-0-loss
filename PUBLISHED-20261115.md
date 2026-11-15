@@ -31,9 +31,9 @@ kept apart by name:
 
 The constellation key is one file in both places: `cce4f1e8ae407f108b5c122e764f0b4c3882ce059cf900a0cc1b2a0e7588c1ea`.
 
-## The seven large GGUFs, listed and not uploaded
+## The seven large GGUFs
 
-GitHub refuses files over 100 MB. These seven are on the operator's machine, with these sizes and hashes. Two of them regenerate
+GitHub refuses files over 100 MB, so these seven are on Hugging Face with the other 41: [Jessedbrown/asolaria-ggufs](https://huggingface.co/Jessedbrown/asolaria-ggufs); links for all 48 are in [`HUGGING-FACE-GGUFS.md`](HUGGING-FACE-GGUFS.md). Their sizes and hashes: Two of them regenerate
 from seeds that are published here (`programs/kernel-pump/KIMI-K3-STAR.txt` with `programs/regenerate/divide_kimi_k3.py`).
 
 | Bytes | sha256 | Name |
