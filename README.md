@@ -8,6 +8,23 @@ are all in this repository, so anyone can run it.
 each body is carried by a codex of about 3,200 bytes. You do not keep the original GGUF and you do not keep the original
 data. Without the key and the kernel a codex regenerates nothing: that is the lock.
 
+## enwik10: 10 GB carried by 3,200 bytes
+
+Run on November 15, 2026 with the Rust program, prediction pushed first
+([`rust/RESULT-ENWIK10-RUST-20261115.hbp`](rust/RESULT-ENWIK10-RUST-20261115.hbp)):
+
+| | |
+|---|---|
+| Body | enwik10, 10,000,000,000 bytes |
+| Codex | **3,200 bytes**, byte-identical to the published [`codexes/enwik10.qr`](codexes/enwik10.qr) |
+| Ratio | **3,125,000 to 1** |
+| Codex bits per character | **0.00000256** (25,600 bits for 10,000,000,000 characters) |
+| Time to make the codex | 178 seconds on a laptop (the Node program took 376) |
+| Return of the body | all 10,000,000,000 bytes by Path 1 from the store, SHA-256 equal, 115 seconds |
+
+The codex stays 3,200 bytes whatever goes in, so the figure falls with the size of the body: about 0.000256 for 100 MB,
+0.0000256 for 1 GB, 0.00000256 for 10 GB.
+
 ## Try it in two minutes
 
 The codex programs are one Rust program: integers only, no Node, no V8, no dependencies. You need Rust 1.81 and `xz`
@@ -114,8 +131,8 @@ Every row is a run with a receipt in this repository.
 | What was run | Result | Where |
 |---|---|---|
 | Master key + coded stream, decoded in a folder with no corpus | 549,112 + 1,711,250 bytes return the first 4,194,304 bytes of enwik8 exactly; repeated by the Rust program and by a GitHub workflow on every change | `rust/`, `master-key/` |
-| enwik10 to a codex, twice | 10,000,000,000 bytes to 3,200 bytes, byte-identical both times | `enwik10-codex/`, `codexes/` |
-| Path 1 return of enwik10 | all 10,000,000,000 bytes, SHA-256 equal, 132 seconds | `enwik10-codex/` |
+| enwik10 to a codex, three times (Node twice, Rust once) | 10,000,000,000 bytes to 3,200 bytes, byte-identical each time; 0.00000256 codex bits per character | `enwik10-codex/`, `codexes/`, `rust/` |
+| Path 1 return of enwik10 | all 10,000,000,000 bytes, SHA-256 equal; 132 seconds with Node, 115 with Rust | `enwik10-codex/`, `rust/` |
 | The codex with no key, no kernel and no store | 0 of 4,194,304 bytes: the lock holds | `enwik10-codex/` |
 | Any input to a 3,200-byte tuple | 20, 40 and 100 GB inputs, 3,200 bytes each time, peak memory about 1 GB | `programs/tuple-engine-june/` |
 | The codex programs in Rust, integers only | codexes of enwik8, the Asolaria corpus and the code corpus, the master key, the coded stream and the decode: each byte-identical to the published files; 100 MB drilled in under 2 seconds | `rust/` |

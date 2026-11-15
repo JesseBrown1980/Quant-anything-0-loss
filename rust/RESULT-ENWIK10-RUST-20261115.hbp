@@ -1,0 +1,7 @@
+RUSTE10RES|prediction=rust/PREDICTION-ENWIK10-RUST-20261115.hbp_(commit_e005fbb)|date=2026-11-15|machine=the_operator_laptop|program=rust/src/main.rs,_Rust_1.81,_integers_only|input=D:/asolaria-e10-20260719/corpus/enwik10|tag=MEASURED|json=0
+DRILL|src=D:/asolaria-e10-20260719/corpus/enwik10|streamed_bytes=10000000000|visited_nodes=1706530|codex_bytes=3200|codex_sha256=5669430ce73dc7268a0a8d51e82edb4550d63be07b29533c981e8ee6ecd67f1f|contexts=65536|json=0
+RUSTE10TIME|drill_seconds=178|resolve_seconds=115|json=0
+CODEX|bytes=3200|sha256=5669430ce73dc7268a0a8d51e82edb4550d63be07b29533c981e8ee6ecd67f1f|json=0
+RESOLVE|corpus=enwik10|returned_bytes=10000000000|expected_bytes=10000000000|sha256=14a033c63a5d03eecdc205e8f7875ece7985a4d278877b0214980d5b3d675f52|path=1_store|json=0
+RUSTE10FIGURE|body_bytes=10000000000|codex_bytes=3200|codex_bits=25600|ratio=3125000_to_1|codex_bits_per_character_x1e12=2560000|that_is=0.00000256_bits_per_character_of_the_body_the_codex_names|return=all_10,000,000,000_bytes_by_Path_1_from_the_store,_sha256_equal|json=0
+RUSTE10JUDGE|E1=MET:_the_codex_is_byte-identical_to_codexes/enwik10.qr|E2=MET:_178_seconds_(Node:_376_and_365)|E3=MET:_10,000,000,000_bytes_returned_with_sha256_14a033c6...,_the_value_of_the_RESOLVE_line_of_enwik10-codex/resolve-path1.log|json=0
