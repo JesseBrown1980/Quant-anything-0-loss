@@ -1,0 +1,9 @@
+CQVERIFYHDR|doc=COMBINED-QUANT-DIRECT-VERIFY|date=2026-06-15|by=acer-claude-direct|reason=workflow-verify-agent-blocked-on-permission-prompt(remote-control-swallowed-no-prompt-shown)|json=0
+CQVERIFYBUILD|files=5|combined-quant-engine.mjs+mode-real-100b.mjs+mode-logical-1e100m.mjs+sector-room-layout.mjs+combined.test.mjs|sectors=113|sector0_children=3-manifests(no-dir-explosion)|D_free_gb=671.4|json=0
+CQVERIFYLOGICAL|mode=B|target=10^100000000|mod3=1|mod6=4|mod4=0|modpow_us=71.4|zeta_forcing=9589/0-violations|sectors=113/113|glyphs=1024/1024|lanes=2731,2730,2731|not_claimed=resident-bodies/processes/provider-calls|json=0
+CQVERIFYREAL|mode=A|selftest=0.1GB-in-suite|tuple_bytes=3200-fixed|residency=bounded-RSS|head=O(N)-streamed|tail=O(1)|fanout=operator-gated-STAGED-auto_fire=0|json=0
+CQVERIFYTESTS|suite=combined.test.mjs|tests=12|pass=12|fail=0|covers=engine-imports+falcon-PASS-or-SKIP-portability-fix+logical-invariant+real-bounded-3200B-tuple+lane-disjoint-rule-of-3+held-safe-gates|json=0
+CQVERIFYLANE|real_lanes={2}|logical_lanes={0}|intersection=empty|regulator=classifyBhIndex-lane=index-mod-3(rule-of-three)|collision=none|json=0
+CQVERIFYHELDSAFE|fire-without-envelope=HeldSafeError|default-real=STAGED-auto_fire=0-no-fanout|drive-division=logical-dirs+manifests-only(NO-physical-repartition)|process_launch=bounded-local-node-selftests-only|json=0
+CQVERIFYCAVEAT|bare-CLI-node-mode-real-100b.mjs-0.25-printed-no-stdout(minor-CLI-guard;functionality-PROVEN-in-suite-real-mode-test)|workflow-w8e3172ru-stopped(blocked-on-permission)|json=0
+CQVERIFYFTR|verdict=COMBINED-QUANT-SYSTEM-BUILT+VERIFIED|reuse=7-shipped-engines-imported-not-rewritten|portability=rayss-falcon-path-FIXED(PASS-or-SKIP)|both-modes=PROVEN|held-safe=1|next=operator-spawner-PID-emit-for-REAL-100B-provider-fanout|json=0

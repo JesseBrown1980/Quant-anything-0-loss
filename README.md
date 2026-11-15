@@ -17,6 +17,19 @@ Two different things in this work return data exactly, and they are kept apart:
    watcher, black mouth to white mouth) return data exactly from a small carried object plus a
    store or enough shadows. The atlas rule applies: the regimes are not collapsed into one ratio.
 
+## Everything is public: master key, kernel, programs, codexes, GGUFs
+
+Published November 15, 2026 at the operator's direction, so anyone can use it. The full list, the
+hashes and how to use each piece are in [`PUBLISHED-20261115.md`](PUBLISHED-20261115.md).
+
+| Folder | What it holds |
+|---|---|
+| [`master-key/`](master-key/) | The 549,112-byte master key and the coded stream it decodes |
+| [`kernel-and-key/`](kernel-and-key/) | The Asolaria kernel and the constellation key (3,174 bytes each), the playbook and the codebook |
+| [`programs/`](programs/) | The July kernel-pump programs, the programs that regenerate large bodies from seeds, and the June engine that turns any input into a 3,200-byte tuple |
+| [`codexes/`](codexes/) | Nine 3,200-byte colour QR codexes |
+| [`ggufs/`](ggufs/) | Forty-one GGUF bodies gathered from across the account's repositories; seven larger ones are listed with their hashes |
+
 ## The programs in this repository
 
 This repository holds working programs with measured results, beside the documents that describe
@@ -40,8 +53,8 @@ the Asolaria kernel, you will regenerate 0."*
 Regeneration of large bodies from seeds (269,604,512 bytes from a 3,796-byte seed; 202,115,456 bytes
 from a 3,110-byte text; each equal to its recorded SHA-256) is recorded in
 [`colour-qr-and-walls/regenerate/`](colour-qr-and-walls/regenerate/) as specs and logs; the
-regenerating programs, the Asolaria KEY and the kernel are on the operator's machine and are not
-in this repository.
+regenerating programs, the Asolaria KEY and the kernel were published here on November 15, 2026
+(`programs/regenerate/`, `kernel-and-key/`).
 
 Notes for anyone running these: the round-trip and codex programs carry the folder paths of the
 machine they were run on and need those edited; the Node programs need Node 24; some programs use

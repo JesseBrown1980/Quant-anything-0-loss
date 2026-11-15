@@ -1,0 +1,11 @@
+COMBINEDHDR|tool=combined-quant-engine|host=acer|node=v24.13.1|mode=logical|tuple_bytes=3200|process_launch=0|network=0|held_safe=1|json=0
+COMBINEDLANES|logical=lane0|real=lane2|shared=lane1|disjoint=YES(lane0∩lane2=∅)|json=0
+LOGHDR|tool=mode-logical-1e100m|host=acer|node=v24.13.1|exp=10^100000000|method=positional-modular-invariant-BigInt-modPow10-no-enumeration|claim=address-plane-exists+bounded-resource-correct;NOT-1e100000000-resident-bodies|json=0
+LOGMODPOW|exp=100000000|mod3=1|mod6=4|mod4=0|sector113=106|glyph1024=0|room10000=0|microseconds=1|json=0
+LOGSUMMON|points=8192|lane_counts=2731,2730,2731|lane_skew=0.000244|sectors=113/113|glyphs=1024/1024|rooms=2000|materialized=0|json=0
+LOGFORCING|pairs=9589|violations=0|gap_mod6_law=0->same-lane;2->2to1;4->1to2|necessary_not_sufficient=1|json=0
+LOGBAND|band=2..1023|band_weight=1.861512572|json=0
+LOGFTR|verdict=LOGICAL-PLANE-COHERENT|bh_extreme_symbolic_to=10^100000000|materialized_crosscheck_to=10^6|birthday_collision_free=realized-slice<<2^(E*log2(10)/2)|all_integer_bigint_time_free=1|json=0
+AQPCONFIG|falcon_lib=none|falcon_status=SKIP|resolved_from=none|reason=falcon-lib-not-configured|json=0
+AQPFALCONCORE|status=SKIP|skip_is_pass=1|json=0
+COMBINEDFTR|verdict=COMBINED-COHERENT-HELD-SAFE|honest=invariants-converge(math-hw-independent);real-100B-fanout-operator-gated;logical-claims-address-plane-not-resident-bodies|json=0
