@@ -1,0 +1,43 @@
+name: Rust codex programs
+
+on:
+  push:
+    paths:
+      - 'rust/**'
+      - 'master-key/**'
+      - 'codexes/**'
+      - '.github/workflows/rust-codex.yml'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Rust 1.81, clippy and build
+        run: |
+          rustup toolchain install 1.81.0 --profile minimal --component clippy
+          cd rust
+          cargo +1.81.0 clippy --release -- -D warnings
+          cargo +1.81.0 build --release
+      - name: decode with the master key, no corpus present
+        run: |
+          mkdir clean
+          xz -d -c master-key/masterkey.xz > clean/key.raw
+          cp master-key/stream.bin clean/
+          ./rust/target/release/asolaria_codex dec clean/key.raw 2 clean/stream.bin 4194304 clean/decoded.bin | tee dec.row
+          echo "5ba647fec2ba51b0383cbe7147e15a478d85613245b7131c41764dbdd5062f77  clean/decoded.bin" | sha256sum -c
+      - name: encode it again and get the published stream
+        run: |
+          ./rust/target/release/asolaria_codex enc clean/key.raw 2 clean/decoded.bin 4194304 clean/again.bin
+          cmp clean/again.bin master-key/stream.bin
+      - name: a codex is 3,200 bytes and repeats
+        run: |
+          ./rust/target/release/asolaria_codex drill clean/decoded.bin a.qr
+          ./rust/target/release/asolaria_codex drill clean/decoded.bin b.qr
+          test "$(stat -c%s a.qr)" = 3200
+          cmp a.qr b.qr

@@ -10,35 +10,59 @@ data. Without the key and the kernel a codex regenerates nothing: that is the lo
 
 ## Try it in two minutes
 
-You need Node 24 and `xz`.
+The codex programs are one Rust program: integers only, no Node, no V8, no dependencies. You need Rust 1.81 and `xz`
+(to unpack the key).
+
+```
+cd rust && cargo build --release && cd ..
+X=rust/target/release/asolaria_codex
+```
 
 **1. Decode with the master key, in an empty folder.**
 
 ```
 mkdir clean
-cp master-key/masterkey.xz master-key/stream.bin master-key/order.txt clean/
-node colour-qr-and-walls/roundtrip/dec.mjs clean 4194304
-sha256sum clean/decoded.bin
+xz -d -c master-key/masterkey.xz > clean/key.raw
+$X dec clean/key.raw 2 master-key/stream.bin 4194304 clean/decoded.bin
 ```
 
-The result is `5ba647fec2ba51b0383cbe7147e15a478d85613245b7131c41764dbdd5062f77`, the first 4,194,304 bytes of enwik8,
-with no corpus in the folder. Checked from these files on November 15, 2026.
+It prints `decoded_sha256=5ba647fec2ba51b0383cbe7147e15a478d85613245b7131c41764dbdd5062f77`, the first 4,194,304 bytes of
+enwik8, from the key and the stream alone. No corpus is in the folder.
 
 **2. Make a codex of any file.**
 
 ```
-node enwik10-codex/drill3k.mjs <any file> out.qr      # out.qr is 3,200 bytes, whatever went in
+$X drill <any file> out.qr          # out.qr is 3,200 bytes, whatever went in
 ```
 
-**3. Compress with the crown.**
+**3. Make a master key from your own bodies, code against it, and decode.**
+
+```
+$X train key.raw 2 body1 body2      # streams the bodies through, keeps only the function table
+$X enc key.raw 2 <file> <N> stream.bin
+$X dec key.raw 2 stream.bin <N> back.bin
+```
+
+**4. Return a body by its codex (Path 1).**
+
+```
+$X resolve out.qr STORE-INDEX.hbp   # the codex names its body; the store returns it
+```
+
+**5. Compress with the crown.**
 
 ```
 rustc -O crown-codec/rust/variants/vc65.rs -o vc65
-./vc65 <file> 10          # prints payload, total, bits per character, restore=OK
+./vc65 <file> 10                    # prints payload, total, bits per character, restore=OK
 ```
 
-The programs carry the folder paths of the machine they were run on (`D:/...`); edit those for your own machine. The
-sealed crown configuration needs about 10.5 GB of memory; change line 12 to `const TBITS: u32 = 24;` for about 1 GB.
+The sealed crown configuration needs about 10.5 GB of memory; change line 12 to `const TBITS: u32 = 24;` for about 1 GB.
+
+**The Rust program gives the published bytes.** Checked on November 15, 2026
+([`rust/RESULT-RUST-PORT-20261115.hbp`](rust/RESULT-RUST-PORT-20261115.hbp)): its codexes of enwik8, the Asolaria corpus
+and the code corpus, its master key, its coded stream and its decode are each byte-identical to the files in this
+repository, and a workflow repeats the decode on every change. The earlier Node programs (`*.mjs`) stay in their folders
+as the originals the Rust program was checked against; they are not needed to run anything.
 
 ## How the system works
 
@@ -55,8 +79,8 @@ sealed crown configuration needs about 10.5 GB of memory; change line 12 to `con
 ```
 
 1. **Quant.** Any input is streamed through once and comes out as a fixed 3,200 bytes. The June engine does this for 20,
-   40 and 100 GB inputs in about 1 GB of memory; `drill3k.mjs` writes the same size as a colour QR (three QR symbols, one
-   per colour channel).
+   40 and 100 GB inputs in about 1 GB of memory; `asolaria_codex drill` writes the same size as a colour QR (three QR
+   symbols, one per colour channel).
 2. **Save.** The 3,200 bytes are the codex. The same size is one room of the system's 8-byte stub rooms: a stub is an
    8-byte address, and the room opens to 3,200 bytes when asked.
 3. **Unlock.** The key and the kernel are loaded on both sides before any coding; the key never travels in the stream.
@@ -151,6 +175,7 @@ enwik9 record holder (fx2-cmix) is at 0.886.
 
 | Folder | Contents |
 |---|---|
+| [`rust/`](rust/) | The codex programs as one Rust 1.81 program, integers only: drill, train, enc, dec, resolve; with the rows of its byte-for-byte check |
 | [`master-key/`](master-key/) | The 549,112-byte master key and the coded stream it decodes |
 | [`kernel-and-key/`](kernel-and-key/) | The Asolaria kernel and the constellation key (3,174 bytes each), the description of the three spheres, the playbook and the codebook. Two kernel files were on the machine with different contents; both are here, kept apart by name |
 | [`programs/`](programs/) | `kernel-pump/`: the fourteen July programs and their seed texts. `regenerate/`: the programs that rebuild large bodies from seeds. `tuple-engine-june/`: the engine that turns any input into a 3,200-byte tuple, with its stress log and proofs |
