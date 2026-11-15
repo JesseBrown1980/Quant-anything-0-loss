@@ -1,0 +1,6 @@
+LEAVESRESULT|date=2026-11-15|library=path2-two-shadow-recovery_(operator,_unchanged)|driver=rust-leaves/src/main.rs|prediction=rust-leaves/PREDICTION-ENWIK10-LEAVES-20261115.hbp|machine=the_operator_laptop|json=0
+LEAVESBLACK|body=enwik10|body_bytes=10000000000|blocks=1250000000|cylinders=7|primes=33554467,33554393,33554321,33554287,33554257,33554243,33554173|leaf_bytes_each=5000000000|all_leaves_bytes=35000000000|seconds=552|json=0
+LEAVESHOLD|leaves=0,1|outcome=HELD|reason=InsufficientJointCapacity|bytes_emitted=0|seconds=2|json=0
+LEAVESWHITE|leaves=2,4,6|inputs=three_leaves_only|outcome=RECOVERED|body_bytes=10000000000|leaf_bytes_read=15000000000|body_sha256=14a033c63a5d03eecdc205e8f7875ece7985a4d278877b0214980d5b3d675f52|equals_enwik10=1|seconds=1018|json=0
+LEAVESENWIK8|seven_leaves_of_50000000_bytes;_leaves_2,4,6_identical;_leaves_0,1,2_identical;_leaves_0,1_HELD;_one_bit_changed_in_leaf_4:_rebuilt_sha256_3834a93b778586315039b574e9aa3c82f41b8cbec2f67b1ee07da7e766c1be59_against_2b49720e...,_8_body_bytes_differ|library_tests=30_of_30|json=0
+LEAVESJUDGE|L1=MET|L2=MET_(sha256_equal)|L3=MET|L4=black_552_s_MET;_white_1018_s_MET|json=0
