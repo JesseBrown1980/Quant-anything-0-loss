@@ -1,0 +1,14 @@
+STRINGHDR|date=2026-11-15|directed_by=OP-JESSE("string_all_the_quants_together")|program=programs/quant-string/string_quants.mjs|every_stage_calls_an_existing_program_or_function_unchanged:_C:/HyperBEHCS/lib/hyperbehcs-core.cjs,_ASOLARIA-AS-NEURAL-NETWORK/tools/behcs/{quant-huge-message-benchmark,zeta-quant,quant4-fidelity-spec}.mjs,_omega_hyper_codec_v0,_path2-two-shadow-recovery|body=first_200,000_bytes_of_enwik8|seconds=25|json=0
+STRING0|stage=body|bytes=200000|sha256=20486802c948015c70e06b26ccd97cb8ae3f69b8c6731cf4c0a4d42481f54229|json=0
+STRING1|stage=R-HEX|quant=14|bytes=400000|exact_lane=1|json=0
+STRING2|stage=Omega_floors_64_256_1024_4096_with_40_operators|quants=17,18,19_and_the_July_operator_catalog|bytes=400940|exact_lane=1|json=0
+STRING3|stage=Path_2_seven_coloured_leaves|quant=23|leaf_bytes_each=200472|kept=2,4,6|kept_bytes=601416|exact_lane=1|json=0
+STRING4|stage=Triple_spherical_at_12_bits_on_three_leaves|quant=12|code_bytes=1202832|meta_bytes=1459|exact_lane=1|json=0
+STRING5|stage=HBH1_envelopes_JL_Turbo_Polar_Triple|quants=9,10,11,12|envelopes=3|bytes=15060|sketch_lane=1|json=0
+STRING6|stage=quant8_tuple|quants=1,2,3,4,5,6,7,8_and_21|bytes=3200|vm_acc=270|sketch_lane=1|json=0
+STRING7|stage=quant4_address_zeta_class_handle8|quant=22_and_the_address_quants|handle8=06dca1d74a51f018|lane_mod3=1|quad_mod4=2|sector113=58|glyph1024=18|zeta_lane=1|zeta_ppow=composite|bytes=8|json=0
+STRING8|stage=HBP_index_row|quants=15,16|bytes=497|json=0
+BACK1|stage=handle_to_tuple_to_codes_to_leaves_by_Triple_reverse|tuple_hash_ok=1|code_hashes_ok=1|three_leaves_identical=1|json=0
+BACK2|stage=Path_2_CRT_from_three_leaves|outcome=RECOVERED|omega_identical=1|json=0
+BACK3|stage=Omega_unpack_then_hex_to_bytes|body_bytes=200000|body_sha256=20486802c948015c70e06b26ccd97cb8ae3f69b8c6731cf4c0a4d42481f54229|equals_body=1|json=0
+STRINGSUM|body_bytes=200000|handle_bytes=8|tuple_bytes=3200|index_row_bytes=497|pieces_read_on_the_way_back=tuple,index_row,three_triple_code_files,their_metadata|pieces_read_bytes=1207988|body_returned_exact=1|json=0
