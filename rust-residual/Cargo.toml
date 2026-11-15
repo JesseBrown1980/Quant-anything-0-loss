@@ -1,0 +1,11 @@
+[package]
+name = "residual_demo"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.81"
+
+[dependencies]
+path2-two-shadow-recovery = { git = "https://github.com/JesseBrown1980/path2-two-shadow-recovery", rev = "e1c63037a800634eecbe91fcdcf00a74e4934dc1" }
+
+[profile.release]
+opt-level = 3
