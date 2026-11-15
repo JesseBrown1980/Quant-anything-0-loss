@@ -17,6 +17,30 @@ Two different things in this work return data exactly, and they are kept apart:
    watcher, black mouth to white mouth) return data exactly from a small carried object plus a
    store or enough shadows. The atlas rule applies: the regimes are not collapsed into one ratio.
 
+## Two systems, kept apart
+
+There are two separate systems in this work. They share laws and file formats and they do
+different jobs. Mixing them gives wrong expectations, so this section states each one.
+
+| | The funnel | The codexes |
+|---|---|---|
+| What it is for | Training the GNNs and the neural networks | Regenerating a body exactly from a very small object |
+| What goes in | Artifacts, cut into records | A GGUF, turned into a rime sphere |
+| What it keeps | The records that repeat ("once is an accident, twice is a function"); the rest is garbage-collected by rule | A codex: an address or a set of shadows of the rime sphere |
+| What comes out | A sorted body for training | The rime sphere again, and from it the GGUF |
+| Program | `project_gguf.py` in the constellation folder | The codex and regenerate programs under `colour-qr-and-walls/` and `enwik10-codex/`, and the recovery paths in `quant-atlas/` |
+
+- **The funnel does not make codexes.** Its retention rule selects what a network should learn
+  from. Pushing a rime sphere or a corpus through the funnel does not give a QR code, and a
+  count of what the funnel keeps says nothing about what a codex needs.
+- **The codexes do not train anything.** Path 1 returns a body by its address in a store.
+  Paths 2 and 3 keep only shadows of the three-dimensional body, which are two-dimensional and
+  can each be stored as a shadow codex; with at least three of them (three leaves) and enough
+  joint capacity the original regenerates without the original being kept
+  ([`quant-atlas/PATH2-DBBH-DBWH-ALGORITHMS-2026-07-11.md`](quant-atlas/PATH2-DBBH-DBWH-ALGORITHMS-2026-07-11.md)).
+- Stated by the operator on November 15, 2026, after this seat proposed a funnel count on a
+  corpus as a step toward a codex. That proposal was wrong and was not run.
+
 ## The crown: measured results
 
 Total-counted (payload plus decoder source), restore OK on every row. From
@@ -67,6 +91,13 @@ Spec sealed before the runs. Rows: [`enwik10-codex/RESULT-ENWIK10-CODEX-20261114
 
 The exact return is Path 1: it needs the store that holds the corpus. The route through the
 funnel, the GGUF and the smelted star has not been run on enwik10 here; status OPEN.
+
+**Correction, November 15, 2026, beside the sentence above (which stays as written).** That
+sentence names "the funnel" as a stage on the way to a codex. It is not one. The operator's
+statement of the design: *"the funnel is for training the GNNs and the neural networks. It's
+not for making the codexes."* The open item on enwik10 belongs to the codex system alone:
+the corpus as a GGUF, the GGUF as a rime sphere, the codex of that rime sphere, and the rime
+sphere regenerated from the codex. See "Two systems, kept apart" below.
 
 ### Run it
 
